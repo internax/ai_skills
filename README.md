@@ -17,6 +17,6 @@ Pak v Claude Code stačí napsat `/novy-projekt`.
 ### `novy-projekt` bez Clauda
 Kostru jde založit i samotným skriptem:
 ```bash
-novy-projekt/zalozit.sh <složka_projektu> [název_vaultu] [název_projektu]
+novy-projekt/scripts/zalozit.sh <složka_projektu> [název_vaultu] [název_projektu]
 ```
 Pluginy Obsidianu se stahují z jejich oficiálních vydání na GitHubu, v repozitáři nejsou.

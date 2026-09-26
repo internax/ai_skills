@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Založí strukturu projektu s Obsidian vaultem (šablona skillu novy-projekt).
+# Založí strukturu projektu s Obsidian vaultem (skill novy-projekt; šablona v ../assets/sablona).
 #
 # Použití:  zalozit.sh <složka_projektu> [název_vaultu] [název_projektu]
 #   složka_projektu  cesta k projektu (vytvoří se, pokud neexistuje)
@@ -11,7 +11,7 @@
 set -euo pipefail
 
 SKRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SABLONA="$SKRIPT_DIR/sablona"
+SABLONA="$SKRIPT_DIR/../assets/sablona"
 
 if [[ $# -lt 1 || "$1" == "-h" || "$1" == "--help" ]]; then
   sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
