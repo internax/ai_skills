@@ -11,13 +11,13 @@ tags: [konvence]
 | Složka | Obsah |
 |---|---|
 | `{{VAULT}}/` | tento Obsidian vault – paměť a kontext projektu |
-| `python/` | skripty a notebooky; `data/` vstupy, `out/` výstupy (grafy, tabulky) |
+| `python/` | skripty a notebooky; `data/` vstupy, `out/` výstupy (grafy, tabulky) | {{JEN_PYTHON}}
 | `nastroje/` | pomocné skripty (`prehled.py`) |
 
 ## Dělba práce
 ### Domény autora
 Části, které si autor dělá sám a do kterých Claude **nezasahuje bez výslovné výzvy**:
-- ❌ doplnit (např. text práce, produkční kód)
+- ❌ doplnit (např. text práce, vlastní kód, šablona dokumentu)
 
 ### Role Clauda
 Rešerše, data, výpočty a grafy, návrhy; **paměť a kontext drží v tomto vaultu**.
@@ -64,10 +64,10 @@ Rešerše, data, výpočty a grafy, návrhy; **paměť a kontext drží v tomto 
 
 ## Data a čísla
 - Každé tvrzení z externího zdroje má zdroj.
-- Čísla mají **jedno místo pravdy** – v kódu (`python/`) s hodnotou, stavem a zdrojem; poznámky odkazují nebo obsahují tabulku generovanou skriptem.
+- Čísla mají **jedno místo pravdy** – pokud je projekt počítá v kódu, žijí tam (hodnota, stav, zdroj) a poznámky na ně odkazují nebo obsahují tabulku generovanou skriptem, ne ručně udržovanou kopii.
 - Odhady značit 🟡 a do finálních výstupů je nepouštět bez ověření.
 
 ## Git
 - Repozitář = celý projekt. Git spravuje Claude z terminálu (ne plugin Obsidian Git).
-- Commit + push na konci každého sezení, zpráva česky: co a proč. Nikdy `--force`.
-- Vzdálený repozitář: ❌ doplnit
+- Na konci každého sezení commit, a push, pokud je nastavený vzdálený repozitář; zpráva česky: co a proč. `--force` ne – přepsal by vzdálenou historii.
+- Vzdálený repozitář: ❌ doplnit (nebo „jen lokálně“)

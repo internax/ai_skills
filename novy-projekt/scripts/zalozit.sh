@@ -1,22 +1,34 @@
 #!/usr/bin/env bash
 # Založí strukturu projektu s Obsidian vaultem (skill novy-projekt; šablona v ../assets/sablona).
 #
-# Použití:  zalozit.sh <složka_projektu> [název_vaultu] [název_projektu]
+# Použití:  zalozit.sh [--python] <složka_projektu> [název_vaultu] [název_projektu]
+#   --python         založí i složku python/ (data/, out/) pro skripty a zpracování dat
 #   složka_projektu  cesta k projektu (vytvoří se, pokud neexistuje)
 #   název_vaultu     název složky vaultu (výchozí: název složky projektu)
 #   název_projektu   lidský název do poznámek (výchozí: název vaultu)
 #
-# Nic nepřepisuje: existující soubory (.gitignore, CLAUDE.md, nastroje/prehled.py…) přeskočí.
-# Pluginy Obsidianu (Dataview, Tasks, Templater, Kanban) stáhne z jejich oficiálních vydání na GitHubu.
+# Nic nepřepisuje: existující CLAUDE.md a nastroje/prehled.py přeskočí, do existujícího
+# .gitignore jen připíše chybějící řádky. Pluginy Obsidianu (Dataview, Tasks, Templater,
+# Kanban) stáhne z jejich oficiálních vydání na GitHubu.
 set -euo pipefail
 
 SKRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SABLONA="$SKRIPT_DIR/../assets/sablona"
 
-if [[ $# -lt 1 || "$1" == "-h" || "$1" == "--help" ]]; then
-  sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+PYTHON=0
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+    --python) PYTHON=1 ;;
+    -h|--help) ARGS=(); break ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+if [[ ${#ARGS[@]} -lt 1 ]]; then
+  sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
   exit 0
 fi
+set -- "${ARGS[@]}"
 
 PROJEKT="$1"
 mkdir -p "$PROJEKT"
@@ -42,21 +54,55 @@ mv "$CIL/Rozhodnutí/DATUM Struktura projektu a vaultu.md" "$CIL/Rozhodnutí/$DA
 zkopiruj_pokud_chybi() {  # zdroj cil
   if [[ -e "$2" ]]; then echo "   přeskočeno (existuje): ${2#$PROJEKT/}"; else mkdir -p "$(dirname "$2")"; cp "$1" "$2"; fi
 }
-zkopiruj_pokud_chybi "$SABLONA/gitignore" "$PROJEKT/.gitignore"
+# .gitignore: nový zkopírovat, do existujícího připsat jen chybějící řádky (původní obsah zůstává)
+if [[ -e "$PROJEKT/.gitignore" ]]; then
+  python3 - "$SABLONA/gitignore" "$PROJEKT/.gitignore" <<'PY'
+import sys
+sablona, cil = sys.argv[1], sys.argv[2]
+mame = {l.strip() for l in open(cil, encoding="utf-8")}
+chybi = [l.rstrip("\n") for l in open(sablona, encoding="utf-8")
+         if l.strip() and not l.startswith("#") and l.strip() not in mame]
+if chybi:
+    with open(cil, "a", encoding="utf-8") as f:
+        f.write("\n# --- doplněno skillem novy-projekt (Obsidian, Claude, Python) ---\n" + "\n".join(chybi) + "\n")
+    print(f"   .gitignore: připsáno {len(chybi)} chybějících řádků, původní obsah beze změny")
+else:
+    print("   .gitignore: nic nechybí")
+PY
+else
+  cp "$SABLONA/gitignore" "$PROJEKT/.gitignore"
+fi
+CLAUDE_NOVY=0
+[[ -e "$PROJEKT/CLAUDE.md" ]] || CLAUDE_NOVY=1
 zkopiruj_pokud_chybi "$SABLONA/CLAUDE.md" "$PROJEKT/CLAUDE.md"
 zkopiruj_pokud_chybi "$SABLONA/nastroje/prehled.py" "$PROJEKT/nastroje/prehled.py"
-mkdir -p "$PROJEKT/python/data" "$PROJEKT/python/out"
-for f in data/.gitkeep out/.gitkeep; do [[ -e "$PROJEKT/python/$f" ]] || cp "$SABLONA/python/$f" "$PROJEKT/python/$f"; done
+if [[ $PYTHON -eq 1 ]]; then
+  mkdir -p "$PROJEKT/python/data" "$PROJEKT/python/out"
+  for f in data/.gitkeep out/.gitkeep; do [[ -e "$PROJEKT/python/$f" ]] || cp "$SABLONA/python/$f" "$PROJEKT/python/$f"; done
+fi
 
-# Zástupné texty {{NAZEV}}, {{VAULT}}, {{DATUM}} (šablony Templateru v _šablony se nemění)
-NAZEV="$NAZEV" VAULT="$VAULT" DATUM="$DATUM" python3 - "$CIL" "$PROJEKT/CLAUDE.md" <<'PY'
+# Zástupné texty {{NAZEV}}, {{VAULT}}, {{DATUM}} a řádky {{JEN_PYTHON}} – jen v nově založených
+# souborech (šablony Templateru v _šablony a existující CLAUDE.md se nemění)
+SOUBORY=("$CIL")
+[[ $CLAUDE_NOVY -eq 1 ]] && SOUBORY+=("$PROJEKT/CLAUDE.md")
+NAZEV="$NAZEV" VAULT="$VAULT" DATUM="$DATUM" PYTHON="$PYTHON" python3 - "${SOUBORY[@]}" <<'PY'
 import os, sys, pathlib
 nahr = {"{{NAZEV}}": os.environ["NAZEV"], "{{VAULT}}": os.environ["VAULT"], "{{DATUM}}": os.environ["DATUM"]}
-vault, claude = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
-soubory = [p for p in vault.rglob("*.md") if "_šablony" not in p.parts] + [claude]
+python = os.environ["PYTHON"] == "1"
+soubory = []
+for a in sys.argv[1:]:
+    p = pathlib.Path(a)
+    soubory += [q for q in p.rglob("*.md") if "_šablony" not in q.parts] if p.is_dir() else [p]
 for p in soubory:
     s = p.read_text(encoding="utf-8")
-    n = s
+    radky = []
+    for r in s.splitlines(keepends=True):
+        if "{{JEN_PYTHON}}" in r:
+            if not python:
+                continue
+            r = r.replace(" {{JEN_PYTHON}}", "").replace("{{JEN_PYTHON}}", "")
+        radky.append(r)
+    n = "".join(radky)
     for k, v in nahr.items():
         n = n.replace(k, v)
     if n != s:
@@ -98,11 +144,11 @@ JSON
 
 echo "→ Git"
 if git -C "$PROJEKT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  echo "   projekt už je v gitu – změny zkontroluj a commitni ručně"
+  echo "   projekt už je v gitu – nic necommituji; zkontroluj 'git status' a commitni ručně"
 else
   git -C "$PROJEKT" init -q -b main
   git -C "$PROJEKT" add -A
-  if git -C "$PROJEKT" commit -q -m "Založení projektu $NAZEV: vault $VAULT, nastroje, python"; then
+  if git -C "$PROJEKT" commit -q -m "Založení projektu $NAZEV: vault $VAULT, nastroje"; then
     echo "   první commit vytvořen"
   else
     echo "   ⚠️  commit se nepovedl (nastav git user.name/user.email) – soubory jsou připravené" >&2

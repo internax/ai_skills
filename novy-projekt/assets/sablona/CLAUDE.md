@@ -7,5 +7,5 @@
 - Rozhodnutí → `{{VAULT}}/Rozhodnutí/` (1 poznámka = 1 rozhodnutí, slepá větev = `stav: zamitnuto`); úkoly a otázky → Tasks se štítkem `#ukol/autor`, `#ukol/claude`, `#otazka/...`. Nic nemazat.
 - **Nespěchat:** nejdřív společně promyslet co a jak, pak data, pak výstupy. Nový krok jen se souhlasem autora.
 - **Domény autora** (bez výslovné výzvy neměnit): ❌ doplnit – viz `{{VAULT}}/Konvence.md`.
-- Data a skripty v `python/` (`data/` vstupy, `out/` výstupy); čísla mají jedno místo pravdy v kódu.
-- **Konec sezení:** aktualizovat `00 Stav projektu`, zapsat deník, commit + push.
+- Data a skripty v `python/` (`data/` vstupy, `out/` výstupy); čísla mají jedno místo pravdy v kódu. {{JEN_PYTHON}}
+- **Konec sezení:** aktualizovat `00 Stav projektu`, zapsat deník, commit (a push, pokud je nastavený vzdálený repozitář).
