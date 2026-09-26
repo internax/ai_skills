@@ -8,6 +8,8 @@ compatibility: Vyžaduje bash, git, python3 a curl (macOS/Linux; na Windows Git 
 
 Budeme spolu dlouhodobě pracovat na projektu. Skill je stavěný pro **osobní projekty jednoho autora** (studium, výzkum, technické a hobby projekty). Tvoje paměť a kontext mezi sezeními je **Obsidian vault uvnitř projektu**. Vše, k čemu dospějeme, v něm průběžně zaznamenávej tak, aby další sezení (nebo jiná instance) mohlo plynule navázat.
 
+Vault je primárně tvůj pracovní nástroj, ale autor do něj může kdykoli nahlédnout, aby viděl, co víš, z čeho vycházíš a co jste zavrhli. Proto piš tak, aby se v něm zorientoval i člověk: celé věty, kontext a u rozhodnutí i slepých větví vždy důvod, žádné zkratky srozumitelné jen tobě. Když autor poznámku přepíše, je to oprava – platí jeho verze.
+
 Skill obsahuje zakládací skript `scripts/zalozit.sh` a šablonu projektu `assets/sablona/` (cesty jsou relativní k base directory skillu). Skript dělá mechanickou část (kostra, pluginy, git), ty vedeš rozhovor a doplňuješ obsah.
 
 ## 1. Než cokoli založíš, zeptej se
