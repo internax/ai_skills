@@ -1,0 +1,15 @@
+---
+typ: rozhodnuti
+stav: rozhodnuto
+datum: {{DATUM}}
+oblast: "[[Konvence]]"
+vytvoreno: {{DATUM}}
+aktualizovano: {{DATUM}}
+tags: [rozhodnuti]
+---
+# Struktura projektu a vaultu
+
+**Rozhodnutí:** Projekt vede Obsidian vault `{{VAULT}}` se strukturou Stav projektu, Rozcestník, Rozhodnutí, Deník, Témata, šablony a nástěnka; pluginy Dataview, Tasks, Templater, Kanban; celý projekt v gitu.
+**Proč:** Paměť a kontext mezi sezeními s Claudem na jednom místě, bez duplicit; přehledy se sestavují samy a `nastroje/prehled.py` je zpřístupní i v terminálu.
+**Alternativy:** Externí tracker (Linear, Jira) – pro menší projekty zbytečná režie; napojit až u týmových projektů.
+**Důsledky:** Pravidla v [[Konvence]].

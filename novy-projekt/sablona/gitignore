@@ -1,0 +1,29 @@
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# Claude Code – lokální instrukce se neverzují (odstraň řádek, pokud je verzovat chceš)
+CLAUDE.md
+
+# Obsidian – stav oken a cache (osobní, mění se neustále)
+**/.obsidian/workspace*.json
+**/.obsidian/cache
+**/.trash/
+# kód pluginů se stáhne znovu (zalozit.sh); verzuje se jen seznam pluginů a jejich nastavení (data.json)
+**/.obsidian/plugins/*/main.js
+**/.obsidian/plugins/*/styles.css
+**/.obsidian/plugins/*/manifest.json
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+
+# Synology Drive
+@eaDir/
+*.SynologyWorkingDirectory
+
+# Doplň podle nástrojů projektu (např. LaTeX: *.aux *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz)
