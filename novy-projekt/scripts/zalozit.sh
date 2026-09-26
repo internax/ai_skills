@@ -56,10 +56,14 @@ zkopiruj_pokud_chybi() {  # zdroj cil
 }
 # .gitignore: nový zkopírovat, do existujícího připsat jen chybějící řádky (původní obsah zůstává)
 if [[ -e "$PROJEKT/.gitignore" ]]; then
-  python3 - "$SABLONA/gitignore" "$PROJEKT/.gitignore" <<'PY'
-import sys
+  VERZOVANE_CLAUDE=0
+  git -C "$PROJEKT" ls-files --error-unmatch CLAUDE.md >/dev/null 2>&1 && VERZOVANE_CLAUDE=1
+  VERZOVANE_CLAUDE=$VERZOVANE_CLAUDE python3 - "$SABLONA/gitignore" "$PROJEKT/.gitignore" <<'PY'
+import os, sys
 sablona, cil = sys.argv[1], sys.argv[2]
 mame = {l.strip() for l in open(cil, encoding="utf-8")}
+if os.environ.get("VERZOVANE_CLAUDE") == "1":
+    mame.add("CLAUDE.md")  # projekt CLAUDE.md už verzuje – neignorovat
 chybi = [l.rstrip("\n") for l in open(sablona, encoding="utf-8")
          if l.strip() and not l.startswith("#") and l.strip() not in mame]
 if chybi:

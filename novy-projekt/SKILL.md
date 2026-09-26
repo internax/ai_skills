@@ -27,7 +27,7 @@ bash "<base directory skillu>/scripts/zalozit.sh" [--python] "<složka projektu>
 ```
 Skript nic nepřepisuje: existující `CLAUDE.md` a `nastroje/prehled.py` přeskočí a do existujícího `.gitignore` jen připíše chybějící řádky (hlavně aby se do gitu nedostal kód pluginů, ~4 MB). Stáhne pluginy z jejich oficiálních vydání a udělá první commit, pokud projekt ještě není v gitu. Zkontroluj jeho výstup; když se plugin nestáhne, řekni to autorovi.
 
-**Existující projekt** (už v gitu, s vlastními soubory): skript necommituje. Po kroku 3 zkontroluj `git status` – do commitu má jít jen vault, `nastroje/`, případně `python/` a úprava `.gitignore`, ne rozpracované soubory autora – a commitni je se zprávou, co přibylo. Když už existuje `CLAUDE.md`, nepřepisuj ho: doplň do něj jen krátkou sekci o vaultu a průběhu sezení.
+**Existující projekt** (už v gitu, s vlastními soubory): skript necommituje. Po kroku 3 zkontroluj `git status` – do commitu má jít jen vault, `nastroje/`, případně `python/`, úprava `.gitignore` a doplněný `CLAUDE.md`, ne rozpracované soubory autora – a commitni je se zprávou, co přibylo. Když už existuje `CLAUDE.md`, nepřepisuj ho: doplň do něj jen krátkou sekci o vaultu a průběhu sezení. Úvodní texty šablony (`00 Stav projektu`, první deník, `Nástěnka`) počítají s novým projektem – u rozdělaného je přepiš podle skutečného stavu (co je v kódu, historie gitu, co autor řekl).
 
 ## 3. Doplň podle rozhovoru
 - `Konvence.md` → sekce **Domény autora** a **Git** (vzdálený repozitář); `CLAUDE.md` v kořeni → popis projektu a domény autora (všechna místa označená ❌).
@@ -38,6 +38,7 @@ Skript nic nepřepisuje: existující `CLAUDE.md` a `nastroje/prehled.py` přesk
   - **Osobní / hobby:** jen základ + `Nápady`
   - **Když na projektu spolupracují další lidé:** poznámka `Témata/Lidé a nástroje` (kdo je kdo, kde je sdílený tracker úkolů nebo repozitář a jak se k nim dostat). Úkoly ostatních zůstávají v jejich nástroji, ve vaultu jsou jen úkoly autora a Clauda (případně s odkazem na ID úkolu v trackeru), ať nejsou na dvou místech.
 - Doplň ruční mapu v `00 Rozcestník.md` a první úkoly/otázky (Tasks se štítky).
+- Git neverzuje prázdné složky: do složek modulů, které zatím nemají poznámku (např. `Měření/`), dej `.gitkeep`; `Témata/.gitkeep` ze šablony smaž, jakmile v `Témata/` přibude první poznámka.
 - **Vzdálený repozitář:** přidej `origin`, nejdřív `git fetch` a podívej se, co tam je. Pokud má vlastní historii (např. README/LICENSE z GitHubu), slouč ji (`git merge origin/main --allow-unrelated-histories`), konflikty vyřeš tak, aby se nic neztratilo, a teprve pak `git push -u origin main`. `--force` nepoužívej – přepsal by vzdálenou historii a autor by mohl přijít o práci, kterou tam má. Zkontroluj, jestli je repo soukromé (`curl -s -o /dev/null -w '%{http_code}' https://api.github.com/repos/<vlastník>/<repo>` vrátí 404 u soukromého); když je veřejné, upozorni autora, že poznámky uvidí kdokoli.
 - Autorovi řekni, ať při prvním otevření vaultu v Obsidianu povolí community pluginy.
 
